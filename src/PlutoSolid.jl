@@ -119,15 +119,15 @@ function serve_notebook(port::Int64=8000, launchbrowser=false)
     # index.html also contains the CSS and JS
 
     function assetserver(assetname)
-        return request::HTTP.Request -> read(joinpath(packagerootdir, "assets", assetname), String)
+        return request::HTTP.Request -> read(joinpath(packagerootdir, "src", assetname), String)
     end
-    Endpoint(assetserver("editor.html"), "/index.html", GET)
-    Endpoint(assetserver("editor.html"), "/index", GET)
-    Endpoint(assetserver("editor.html"), "/", GET)
+    Pages.Endpoint(assetserver("editor.html"), "/index.html", GET)
+    Pages.Endpoint(assetserver("editor.html"), "/index", GET)
+    Pages.Endpoint(assetserver("editor.html"), "/", GET)
 
-    Endpoint(assetserver("light.css"), "/customstyle.css", GET)
+    # Pages.Endpoint(assetserver("light.css"), "/customstyle.css", GET)
 
-    Endpoint("/ping", GET) do request::HTTP.Request
+    Pages.Endpoint("/ping", GET) do request::HTTP.Request
         HTTP.Response(200, JSON.json("OK!"))
     end
 
@@ -171,7 +171,7 @@ function serve_notebook(port::Int64=8000, launchbrowser=false)
         return true
     end
 
-    Endpoint("/addcell", POST) do request::HTTP.Request
+    Pages.Endpoint("/addcell", POST) do request::HTTP.Request
         bodyobject = JSON.parse(String(request.body))
         display(bodyobject)
         new_index = bodyobject["index"] + 1 # 0-based index (js) to 1-based index (julia)
@@ -185,7 +185,7 @@ function serve_notebook(port::Int64=8000, launchbrowser=false)
         HTTP.Response(200, JSON.json("OK!"))
     end
 
-    Endpoint("/deletecell", DELETE) do request::HTTP.Request
+    Pages.Endpoint("/deletecell", DELETE) do request::HTTP.Request
         bodyobject = JSON.parse(String(request.body))
         uuid = UUID(bodyobject["uuid"])
 
@@ -205,7 +205,7 @@ function serve_notebook(port::Int64=8000, launchbrowser=false)
         HTTP.Response(200, JSON.json("OK!"))
     end
 
-    Endpoint("/movecell", PUT) do request::HTTP.Request
+    Pages.Endpoint("/movecell", PUT) do request::HTTP.Request
         bodyobject = JSON.parse(String(request.body))
         uuid = UUID(bodyobject["uuid"])
         to_move = selectcell_byuuid(notebook, uuid)
@@ -231,7 +231,7 @@ function serve_notebook(port::Int64=8000, launchbrowser=false)
         HTTP.Response(200, JSON.json("OK!"))
     end
 
-    Endpoint("/changecell", PUT) do request::HTTP.Request
+    Pages.Endpoint("/changecell", PUT) do request::HTTP.Request
         bodyobject = JSON.parse(String(request.body))
         uuid = UUID(bodyobject["uuid"])
         newcode = bodyobject["code"]
@@ -250,7 +250,7 @@ function serve_notebook(port::Int64=8000, launchbrowser=false)
     # This is done using so-called "HTTP long polling": the server stalls for every request, until an update needs to be sent, and then responds with that update.
     # (Hacky solution that powers millions of printis around the globe)
     # TODO: change to WebSockets implementation, is built into Pages.jl?
-    Endpoint("/nextcellupdate", GET) do request::HTTP.Request
+    Pages.Endpoint("/nextcellupdate", GET) do request::HTTP.Request
         # This method became a bit complicated - it needs to close old requests when a new one came in.
         # otherwise it would be one line:
         # JSON.json(take!(pendingclientupdates))
@@ -285,7 +285,7 @@ function serve_notebook(port::Int64=8000, launchbrowser=false)
         JSON.json(nextUpdate)
     end
 
-    Endpoint("/getcell", GET) do request::HTTP.Request
+    Pages.Endpoint("/getcell", GET) do request::HTTP.Request
         println(request)
 
         bodyobject = JSON.parse(String(request.body))
@@ -299,7 +299,7 @@ function serve_notebook(port::Int64=8000, launchbrowser=false)
         JSON.json(serialize(cell))
     end
 
-    Endpoint("/getallcells", GET) do request::HTTP.Request
+    Pages.Endpoint("/getallcells", GET) do request::HTTP.Request
         # TOOD: when reloading, the old client will get the first update
         # to solve this, it might be better to move this for loop to the client:
         for cell in notebook.cells
