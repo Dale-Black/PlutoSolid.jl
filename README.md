@@ -5,7 +5,7 @@ julia +1.6
 ```
 Then within the Julia REPL
 ```
-using Pkg; Pkg.activate(mktempdir()); Pkg.add("Revise"); Pkg.develop(path=pwd()); using Revise, Pluto; Pluto.serve_notebook(1234)
+using Pkg; Pkg.activate(mktempdir()); Pkg.add("Revise"); Pkg.develop(path=pwd()); using Revise, PlutoSolid; PlutoSolid.serve_notebook(1234)
 ```
 
 
