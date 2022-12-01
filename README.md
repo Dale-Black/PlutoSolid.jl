@@ -1,5 +1,5 @@
 # Update - Dale
-Simply clone this branch and load this in vscode. Using `juliaup` make sure to download Julia v1.6. Then within the integrated terminal type
+Simply clone this repo and load this in vscode. Using `juliaup` make sure to download Julia v1.6. Then within the integrated terminal type
 ```
 julia +1.6
 ```
