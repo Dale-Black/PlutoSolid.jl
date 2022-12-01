@@ -125,7 +125,7 @@ function serve_notebook(port::Int64=8000, launchbrowser=false)
     Endpoint(assetserver("index.html"), "/index", GET)
     Endpoint(assetserver("index.html"), "/", GET)
 
-    # Endpoint(assetserver("light.css"), "/customstyle.css", GET)
+    # Endpoint(assetserver("/index.css"), "/customstyle.css", GET)
 
     Endpoint("/ping", GET) do request::HTTP.Request
         HTTP.Response(200, JSON.json("OK!"))
