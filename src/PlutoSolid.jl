@@ -119,13 +119,13 @@ function serve_notebook(port::Int64=8000, launchbrowser=false)
     # index.html also contains the CSS and JS
 
     function assetserver(assetname)
-        return request::HTTP.Request -> read(joinpath(packagerootdir, "assets", assetname), String)
+        return request::HTTP.Request -> read(joinpath(packagerootdir, "my-solid-project", assetname), String)
     end
-    Endpoint(assetserver("editor.html"), "/index.html", GET)
-    Endpoint(assetserver("editor.html"), "/index", GET)
-    Endpoint(assetserver("editor.html"), "/", GET)
+    Endpoint(assetserver("index.html"), "/index.html", GET)
+    Endpoint(assetserver("index.html"), "/index", GET)
+    Endpoint(assetserver("index.html"), "/", GET)
 
-    Endpoint(assetserver("light.css"), "/customstyle.css", GET)
+    # Endpoint(assetserver("light.css"), "/customstyle.css", GET)
 
     Endpoint("/ping", GET) do request::HTTP.Request
         HTTP.Response(200, JSON.json("OK!"))

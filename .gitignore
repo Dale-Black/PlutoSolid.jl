@@ -7,3 +7,7 @@ Manifest.toml
 
 # editor-specific
 .vscode
+
+# solid
+node_modules
+dist
