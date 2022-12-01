@@ -119,7 +119,7 @@ function serve_notebook(port::Int64=8000, launchbrowser=false)
     # index.html also contains the CSS and JS
 
     function assetserver(assetname)
-        return request::HTTP.Request -> read(joinpath(packagerootdir, "my-solid-project", assetname), String)
+        return request::HTTP.Request -> read(joinpath(packagerootdir, "frontend", assetname), String)
     end
     Endpoint(assetserver("index.html"), "/index.html", GET)
     Endpoint(assetserver("index.html"), "/index", GET)
